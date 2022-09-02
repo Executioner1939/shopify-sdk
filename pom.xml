@@ -49,6 +49,25 @@
 		</repository>
 	</distributionManagement>
 
+	<profiles>
+		<profile>
+			<id>github</id>
+			<repositories>
+				<repository>
+					<id>central</id>
+					<url>https://repo1.maven.org/maven2</url>
+				</repository>
+				<repository>
+					<id>github</id>
+					<url>https://maven.pkg.github.com/Executioner1939/shopify-sdk</url>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+		</profile>
+	</profiles>
+
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -253,23 +272,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>github</id>
-			<repositories>
-				<repository>
-					<id>central</id>
-					<url>https://repo1.maven.org/maven2</url>
-				</repository>
-				<repository>
-					<id>github</id>
-					<url>https://maven.pkg.github.com/Executioner1939/shopify-sdk</url>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-				</repository>
-			</repositories>
-		</profile>
-	</profiles>
 </project>

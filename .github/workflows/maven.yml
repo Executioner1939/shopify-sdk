@@ -31,5 +31,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-    - name: Publish package to maven central
-      run: mvn --batch-mode --update-snapshots package
+    - name: Publish package to Github Packages
+      run: mvn --batch-mode deploy
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
