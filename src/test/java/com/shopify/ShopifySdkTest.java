@@ -370,8 +370,8 @@ public class ShopifySdkTest {
 		shopifyTransaction1.setId("123");
 		shopifyTransaction1.setMessage("Refunded 12.72 from manual gateway");
 		shopifyTransaction1.setAmount(new BigDecimal(12.72));
-		shopifyTransaction1.setStatus("SUCCESS");
-		shopifyTransaction1.setKind("refund_discrepancy");
+		shopifyTransaction1.setStatus(TransactionStatus.SUCCESS);
+		shopifyTransaction1.setKind(TransactionKind.REFUND);
 		shopifyTransaction1.setGateway("manual");
 		shopifyTransaction1.setCurrency(Currency.getInstance("USD"));
 		shopifyTransaction1.setMaximumRefundable(new BigDecimal(15.99));
@@ -379,8 +379,8 @@ public class ShopifySdkTest {
 		final ShopifyTransaction shopifyTransaction2 = new ShopifyTransaction();
 		shopifyTransaction2.setId("456");
 		shopifyTransaction2.setAmount(new BigDecimal("10.50"));
-		shopifyTransaction2.setStatus("FAILURE");
-		shopifyTransaction2.setKind("refund_discrepancy");
+		shopifyTransaction2.setStatus(TransactionStatus.ERROR);
+		shopifyTransaction2.setKind(TransactionKind.REFUND);
 		shopifyTransaction2.setGateway("manual");
 		shopifyTransaction2.setCurrency(Currency.getInstance("USD"));
 		shopifyTransaction2.setMaximumRefundable(new BigDecimal(15.99));
@@ -1813,13 +1813,15 @@ public class ShopifySdkTest {
 				.withOrderId("1234")
 				.withId("MY_ID")
 				.withAmount(BigDecimal.ONE)
-				.withStatus("APPROVED")
-				.withKind("manual")
+				.withNoAuthorization()
+				.withNoAuthorizationExpiresAt()
+				.withNoExtendedAuthorizationAttributes()
+				.withStatus(TransactionStatus.SUCCESS)
+				.withKind(TransactionKind.CAPTURE)
 				.withGateway("shopify")
 				.withCurrency(Currency.getInstance("USD"))
 				.withMaximumRefundable(BigDecimal.ZERO)
 				.build();
-
 
 		final ShopifyTransaction request = shopifyTransactionCreationRequest.getRequest();
 		shopifyTransactionRoot.setTransaction(request);
@@ -1847,7 +1849,6 @@ public class ShopifySdkTest {
 		);
 
 		final ShopifyTransaction shopifyTransaction = shopifySdk.createOrderTransaction(shopifyTransactionCreationRequest);
-
 		assertNotNull(shopifyTransaction);
 		assertEquals(request.getOrderId(), shopifyTransaction.getOrderId());
 		assertEquals(request.getId(), shopifyTransaction.getId());
@@ -2864,7 +2865,7 @@ public class ShopifySdkTest {
 		shopifyTransaction.setAmount(new BigDecimal(11.23));
 		shopifyTransaction.setCurrency(Currency.getInstance("USD"));
 		shopifyTransaction.setGateway("bogus");
-		shopifyTransaction.setKind("suggested_refund");
+		shopifyTransaction.setKind(TransactionKind.REFUND);
 		shopifyTransaction.setMaximumRefundable(new BigDecimal(11.23));
 		shopifyTransaction.setOrderId("123123");
 		shopifyTransaction.setParentId("44444");
@@ -3647,7 +3648,7 @@ public class ShopifySdkTest {
 		shopifyTransaction1.setAmount(new BigDecimal(11.11));
 		shopifyTransaction1.setCurrency(Currency.getInstance("USD"));
 		shopifyTransaction1.setGateway("bogus");
-		shopifyTransaction1.setKind("sale");
+		shopifyTransaction1.setKind(TransactionKind.SALE);
 
 		final ShopifyTransactionReceipt shopifyTransactionReceipt1 = new ShopifyTransactionReceipt();
 		shopifyTransactionReceipt1.setApplePay(true);
@@ -3657,7 +3658,7 @@ public class ShopifySdkTest {
 		shopifyTransaction2.setAmount(new BigDecimal(11.11));
 		shopifyTransaction2.setCurrency(Currency.getInstance("CAD"));
 		shopifyTransaction2.setGateway("bogus2");
-		shopifyTransaction2.setKind("sale2");
+		shopifyTransaction2.setKind(TransactionKind.SALE);
 
 		final ShopifyTransactionReceipt shopifyTransactionReceipt2 = new ShopifyTransactionReceipt();
 		shopifyTransactionReceipt2.setApplePay(false);
