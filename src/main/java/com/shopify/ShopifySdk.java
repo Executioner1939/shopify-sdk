@@ -561,6 +561,17 @@ public class ShopifySdk {
         return shopifyOrderRootResponse.getOrder();
     }
 
+    public ShopifyTransaction createOrderTransaction(ShopifyTransactionCreationRequest shopifyOrderTransactionCreationRequest) {
+        final ShopifyTransactionRoot shopifyTransactionRoot = new ShopifyTransactionRoot();
+        final ShopifyTransaction shopifyTransaction = shopifyOrderTransactionCreationRequest.getRequest();
+        final String shopifyOrderId = shopifyTransaction.getOrderId();
+        shopifyTransactionRoot.setTransaction(shopifyTransaction);
+
+        final Response response = post(buildOrdersEndpoint().path(shopifyOrderId).path(TRANSACTIONS), shopifyTransactionRoot);
+        final ShopifyTransactionRoot shopifyTransactionRootResponse = response.readEntity(ShopifyTransactionRoot.class);
+        return shopifyTransactionRootResponse.getTransaction();
+    }
+
     public List<ShopifyTransaction> getOrderTransactions(final String orderId) {
         final Response response = get(buildOrdersEndpoint().path(orderId).path(TRANSACTIONS));
 
@@ -810,7 +821,7 @@ public class ShopifySdk {
     public ShopifyRefund refund(final ShopifyRefundCreationRequest shopifyRefundCreationRequest) {
 
         final ShopifyRefund calculatedShopifyRefund = calculateRefund(shopifyRefundCreationRequest);
-        calculatedShopifyRefund.getTransactions().forEach(transaction -> transaction.setKind(REFUND_KIND));
+        calculatedShopifyRefund.getTransactions().forEach(transaction -> transaction.setKind(TransactionKind.REFUND));
 
         final WebTarget path = buildOrdersEndpoint().path(shopifyRefundCreationRequest.getRequest().getOrderId()).path(REFUNDS);
         final ShopifyRefundRoot shopifyRefundRoot = new ShopifyRefundRoot();
